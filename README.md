@@ -1,6 +1,7 @@
 # ytmusicdw
-Este programa descarga el audio de mejor calidad relacionado al link de yt que le pases.
-En este momento soporta descarga de videos y playlist publicas pero **no mixes**, en caso de que uses el link de un mix solo descarga el video actual.
+Este programa es un frontend para pytube.
+En este momento soporta descarga de videos y playlist publicas
+Los binarios estan en la carpeta **dist**
 
 Y dejo una lista de aplicaciones open source compatibles que he podido probar:
 * MusicPlayerGO - Android https://f-droid.org/es/packages/com.iven.musicplayergo/ 
