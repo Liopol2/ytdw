@@ -1,6 +1,8 @@
+import re
 from tkinter import *
-from tkinter.ttk import *
+from tkinter import ttk
 import os
+from tkinter import filedialog
 from pytube import *
 from pytube.cli import on_progress
 from icecream import ic
@@ -8,57 +10,64 @@ from icecream import ic
 app = Tk() 
 app.title('Youtube Downloader')
 
-#Output Option
-output=StringVar(app,'audio')
-outputoptions ={
-            'Audio':'audio',
-            'Video':'video'
-        }
+#Video Quality Options
+videoqualityoptions = [
+            '144p',
+			'240p',
+			'360p',
+			'480p',
+			'720p',
+			'Highest'
+]
 
-#Video Quality Option
-videoquality = StringVar(app,'first')
-videoqualityoptions = {
-            '144p':"144p",
-			'240p':"240p",
-			'360p':"360p",
-			'480p':"480p",
-			'720p':"720p",
-			'highest':'first'
-        }
-
-#Audio Quality Option
-audioquality = StringVar(app,'160kbps')	
-audioqualityoptions = {
-	'48kbps(mp4)':'48kbps',
-	'50kbps(webm)':'50kbps',
-	'70kbps(webm)':'70kbps',
-	'128kbps(mp4)':'128kbps',
-	'160kbps(webm)':'160kbps'	
-}
-
-def update_output_value():
-    selected_option = output.get()
-
-    print(f"Selected option: {selected_option}")
-
-    if selected_option == 'video':
-        for (txt, val) in videoqualityoptions.items():
-            Radiobutton(app, text=txt, variable=videoquality, value=val).pack(side=TOP, ipady=4)
-    elif selected_option == 'audio':
-        Label(app, text='Audio Quality', font=20).pack()
-        for (txt, val) in audioqualityoptions.items():
-            Radiobutton(app, text=txt, variable=audioquality, value=val).pack(side=TOP, ipady=4)
+#Audio Quality Options
+audioqualityoptions = [
+	'48kbps(mp4)',
+	'50kbps(webm)',
+	'70kbps(webm)',
+	'128kbps(mp4)',
+	'160kbps(webm)'
+]
+#Output Options
+outputoptions = [
+	'Audio',
+	'Video'
+]
+	
+def select_output(event):
+	out=outputbox.get()
+	ic(out)
+	if out == 'Video':
+		qualitybox.config(value=videoqualityoptions)
+		qualitybox.current(5)  
+	elif out == 'Audio':
+		qualitybox.config(value=audioqualityoptions)
+		qualitybox.current(4)
+  
 #Output choice
 outputlabel=Label(text='Output',font=20).pack()
-videoout=Radiobutton(app, text="Audio", variable=output, value='audio', command=update_output_value).pack(side = TOP, ipady = 4) 
-audioout=Radiobutton(app, text="Video", variable=output, value='video', command=update_output_value).pack(side = TOP, ipady = 4) 
+outputbox=ttk.Combobox(app,value=outputoptions)
+outputbox.current(0)
+outputbox.pack(pady=20)
+outputbox.bind("<<ComboboxSelected>>",select_output)
+Label(app, text='Quality', font=20).pack()
+qualitybox=ttk.Combobox(app,value=audioqualityoptions)
+qualitybox.current(4)
+qualitybox.pack(pady=20)
 
 
 #Output Folder
 folder = os.path.join(os.path.expanduser('~'),'Music')
-print(folder)
-folderlabel=Label(text=f"Destino: {folder}",font=25).pack()
-
+def cambiardestino(e):   
+	global folder
+	newfolder=filedialog.askdirectory(initialdir = folder,title="Seleccione una Carpeta:")
+	if newfolder:
+		folder = newfolder
+		folderlabel.config(text=f"Destino: {folder}",font=25)
+  
+folderlabel=Label(text=f"Destino: {folder}",font=25)
+folderlabel.bind('<1>',cambiardestino)
+folderlabel.pack()
 #Link
 def clearentry(event):
 	link.config(foreground='black')
@@ -77,42 +86,40 @@ def validate_link(event):
 	#If this is only 1 video
 	else:
 		stream=YouTube(url)
+		ic(f'Video: {stream.title}')
 		downloadstream(stream)
-		ic(f'{stream.title} listo en {folder}')
 
 def downloadstream(video):
 	bytes_received=0
-	if output.get() == 'audio':
-		aquality=audioquality.get()		
-		try:
-			a=video.streams.filter(only_audio=True,abr=audioquality.get())
-			size=a.first().filesize
-			for item in video.streams.filter(only_audio=True):
-				ic(item)
-			ic(a,size)
+	quality=qualitybox.get()	
+	output=outputbox.get()
+	if output == 'Audio':
+		qualityval = re.sub(r'\([^)]*\)', '', quality)
+		ic(qualityval)
+		a=video.streams.filter(only_audio=True,abr=qualityval)
+		if a:
 			a.first().download(output_path=folder)
-			content.set(f'{video.title} Listo {audioquality.get()}')
-		except Exception as e:
-			ic(f'Exception al procesar audio {e}')
-	elif output.get() == 'video':
-		vquality=videoquality.get()		
-		if vquality == 'first':
+			content.set(f'{video.title} {qualityval} ✔')
+			link.config(foreground='green')
+		else: 
+			content.set(f'Intente con calidad distinta a {quality}')
+			link.config(foreground='red')
+	elif output == 'Video':
+		if quality == 'Highest':
 			v=video.streams.filter(progressive=True).order_by("resolution").first()
 			content.set(f'descagado {video} a la mejor calidad')
 			v.download(output_path=folder)
-		elif vquality:			
-			try:
-				ic(vquality)
-				v=video.streams.filter(progressive=True,res=vquality).first()
-				size=v.filesize
-				content.set(f'descagado {video.title} ')
-				ic(f'descargando {video.title} de {size} MB.')
-				v.download(output_path=folder)
-			except Exception as e:
-				ic({e})
-				content.set(f'error con {video.title} a calidad {videoquality.get()} reintente con otra calidad')
-		else:
-			ic(f"se ejecuto else {videoquality.get()}")
+			link.config(foreground='green')
+		elif quality:			
+				v=video.streams.filter(progressive=True,res=quality).first()
+				ic(video,video.streams.filter(progressive=True))
+				if v:
+					v.download(output_path=folder)
+					content.set(f'{video.title} {quality} ✔')
+					link.config()
+				else:
+					content.set(f'Intente con calidad distinta a {quality}')
+					link.config(foreground='red')
 
 content=StringVar(app,'Insert link here')
 link = Entry(width=31, font='Arial 30',justify='center',textvariable=content)
