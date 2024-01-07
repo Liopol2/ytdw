@@ -6,9 +6,10 @@ from tkinter import filedialog
 from pytube import *
 from pytube.cli import on_progress
 from icecream import ic
-# Creat ing parent Tkinter window 
+# Creating parent Tkinter window 
 app = Tk() 
 app.title('Youtube Downloader')
+app.iconbitmap('YoutubeDownloader.ico')
 
 #Video Quality Options
 videoqualityoptions = [
