@@ -1,7 +1,9 @@
 # ytmusicdw
 Este programa es un frontend para pytube.
 En este momento soporta descarga de videos y playlist publicas
-Los binarios estan en la carpeta **dist**
+Los binarios estan en la carpeta **dist**, ambos son portables
+-WindowsDowloader.exe puede ser ejecutado sin mas .
+-**ytdw.exe necesita tener YoutubeDownloader.ico en el mismo directorio para funcionar**
 
 Y dejo una lista de aplicaciones open source compatibles que he podido probar:
 * MusicPlayerGO - Android https://f-droid.org/es/packages/com.iven.musicplayergo/ 
