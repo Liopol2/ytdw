@@ -1,3 +1,5 @@
+#En caso de querer compilar tus propios binarios instalar pyinstaler ($pip install pyinstaller) 
+#Y escribiendo $ pyinstaller -F -w --icon=YoutubeDownloader.ico ytdw.py en su consola preferida.
 from tkinter import *
 from tkinter import ttk,filedialog
 import os,re
@@ -8,6 +10,8 @@ from icecream import ic
 app = Tk() 
 app.title('Youtube Downloader')
 app.config(bg='black')
+
+#En caso de querer compilar este programa con pyinstaller comente la siguiente linea o incluya en el mismo directorio del ejecutable YoutubeDownloader.ico
 app.iconbitmap('YoutubeDownloader.ico')
 
 #Video Quality Options
