@@ -1,18 +1,21 @@
 #En caso de querer compilar tus propios binarios instalar pyinstaler ($pip install pyinstaller) 
-#Y escribiendo $ pyinstaller -F -w --icon=YoutubeDownloader.ico ytdw.py en su consola preferida.
+#Y escriba $ pyinstaller -F -w --icon=YoutubeDownloader.ico ytdw.py en su consola preferida, para compilar.
 from tkinter import *
 from tkinter import ttk,filedialog
 import os,re
 from pytube import *
 from pytube.cli import on_progress
-from icecream import ic
+
+#icecream es opcional, solo se esta usando para debuggear.
+#from icecream import ic
+
 # Creating parent Tkinter window 
 app = Tk() 
 app.title('Youtube Downloader')
 app.config(bg='black')
 
 #En caso de querer compilar este programa con pyinstaller comente la siguiente linea o incluya en el mismo directorio del ejecutable YoutubeDownloader.ico
-app.iconbitmap('YoutubeDownloader.ico')
+#app.iconbitmap('YoutubeDownloader.ico')
 
 #Video Quality Options
 videoqualityoptions = [
@@ -40,7 +43,7 @@ outputoptions = [
 	
 def select_output(event):
 	out=outputbox.get()
-	ic(out)
+	#ic(out)
 	if out == 'Video':
 		qualitybox.config(value=videoqualityoptions)
 		qualitybox.current(5)  
@@ -87,12 +90,12 @@ def validate_link(event):
 		playlist=Playlist(url)
 		for stream in playlist.videos:
 			stream.register_on_progress_callback(on_progress)
-			ic(f'descargando {stream.title} de {playlist.title}')
+			#ic(f'descargando {stream.title} de {playlist.title}')
 			downloadstream(stream) 
 	#If this is only 1 video
 	else:
 		stream=YouTube(url)
-		ic(f'Video: {stream.title}')
+		#ic(f'Video: {stream.title}')
 		downloadstream(stream)
 
 def downloadstream(video):
@@ -107,7 +110,7 @@ def downloadstream(video):
 		else:
 			#este regex quita lo que esta dentro del parentesis
 			qualityval = re.sub(r'\([^)]*\)', '', quality)
-			ic(qualityval)
+			#ic(qualityval)
 			a=video.streams.filter(only_audio=True,abr=qualityval)
 			if a:      
 				a.first().download(output_path=folder)
@@ -129,7 +132,7 @@ def downloadstream(video):
 			elif quality:			
 					v=video.streams.filter(progressive=True,res=quality).first()
 					filename=f'{video.title}.webm'
-					ic(video,filename)
+					#ic(video,filename)
 					if v:
 						if filename in folder:						
 							content.set(f'⬇ {video.title}')
