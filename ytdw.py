@@ -89,6 +89,8 @@ def validate_link(event):
 			stream.register_on_progress_callback(on_progress)
 			ic(f'descargando {stream.title} de {playlist.title}')
 			downloadstream(stream) 
+		link.config(fg='green')
+		content.set(f'{playlist.title} ✔')
 	#If this is only 1 video
 	else:
 		stream=YouTube(url)
