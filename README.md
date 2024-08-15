@@ -1,4 +1,5 @@
 # ytmusicdw
+![pytube](pytube.jpg)
 Este programa es un frontend para pytube.
 En este momento soporta descarga de videos y playlist publicas.
 Los binarios estan en la carpeta **dist**, ambos son portables,revise las otras branches para binarios de linux, o compile los suyos propios siguiendo las instrucciones en el codigo base.
