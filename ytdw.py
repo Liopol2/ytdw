@@ -16,6 +16,10 @@ app.config(bg='black')
 #En caso de querer compilar este programa con pyinstaller comente la siguiente linea o incluya en el mismo directorio del ejecutable YoutubeDownloader.ico
 #app.iconbitmap('YoutubeDownloader.ico')
 
+#nada por ahora 
+Transcriptoptions=[
+	
+]
 #Video Quality Options
 videoqualityoptions = [
             '144p',
@@ -37,19 +41,24 @@ audioqualityoptions = [
 #Output Options
 outputoptions = [
 	'Audio',
-	'Video'
+	'Video',
+	'Transcript'
 ]
 	
 def select_output(event):
 	out=outputbox.get()
 	#ic(out)
-	if out == 'Video':
-		qualitybox.config(value=videoqualityoptions)
-		qualitybox.current(5)  
-	elif out == 'Audio':
-		qualitybox.config(value=audioqualityoptions)
-		qualitybox.current(4)
-  
+	match out:
+		case 'Video' :
+			qualitybox.config(value=videoqualityoptions)
+			qualitybox.current(5)  
+		case 'Audio':
+			qualitybox.config(value=audioqualityoptions)
+			qualitybox.current(4)
+		case 'Transcript':
+			qualitybox.config(value=Transcriptoptions)
+
+
 #Output choice
 outputlabel=Label(text='Output',font=20).grid(row=0, column=0, padx=10, pady=5, sticky="NESW")
 outputbox=ttk.Combobox(app,value=outputoptions)
@@ -119,7 +128,7 @@ def getstream(video):
 	title=video.title
 	match output:
 		case 'Audio':
-			if os.path.exists(f'{folder}/{video.title}.webm'):
+			if os.path.exists(f'{folder}/{video.title}.webm'): #save folder 
 				fileexist(title)
 			else:
 				#este regex quita lo que esta dentro del parentesis

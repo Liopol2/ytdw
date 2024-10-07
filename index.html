@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Does anybody look up here?</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>ytdw</h1>
+      <input type="text" name="link" id="link" value="Click Acá" onclick=empty>
+      <h3 id="status">Loading</h3>
+      <label for="formato">Formato: </label>
+      <select id="formato" name="formato">
+        <optgroup label="Audio webm">
+          <option value="160kbps(webm)">160kbps(webm)</option>
+          <option value="70kbps(webm)">70kbps(webm)</option>
+          <option value="50kbps(webm)">50kbps(webm)</option>
+        </optgroup>
+        <optgroup label="Audio mp4">
+          <option value="128kbps(mp4)">128kbps(mp4)</option>
+          <option value="48kbps(mp4)">48kbps(mp4)</option>
+        </optgroup>
+        <optgroup label="Video">Video
+          <option value="Highest">Highest</option>
+          <option value="720p">720p</option>
+          <option value="480p">480p</option>
+          <option value="360p">360p</option>
+          <option value="240p">240p</option>
+          <option value='144p'>144p</option>
+        </optgroup>
+        <option value="Transcripción">Transcripción</option>
+      </select> 
+    </div>
+  </body>
+</html>
