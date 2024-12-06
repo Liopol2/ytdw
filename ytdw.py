@@ -3,7 +3,7 @@
 from tkinter import *
 from tkinter import ttk,filedialog
 import os,re
-from pytube import YouTube,Playlist
+from pytubefix import YouTube,Playlist
 
 #icecream es opcional, solo se esta usando para debuggear.
 from icecream import ic
@@ -84,16 +84,19 @@ def clearentry(event):
 	
 def validate_link(event):
 	url= content.get()
+	ic(url)
 	link.config(foreground='blue')
 	#manage playlist
 	if 'playlist' in url:
 		playlist=Playlist(url)
 		for stream in playlist.videos:
-			video= YouTube(stream.watch_url,on_progress_callback=on_progress)
+			video= YouTube(stream.watch_url) #video= YouTube(stream.watch_url,on_progress_callback=on_progress)
 			getstream(video) 
 	#If this is only 1 video
 	else:
-		stream=YouTube(url,on_progress_callback=on_progress)
+		stream=YouTube(url) #stream=YouTube(url,on_progress_callback=on_progress)
+		isavailable = stream.check_availability()
+		ic(stream, isavailable)
 		getstream(stream)
 
 #Progressbar method
@@ -126,6 +129,7 @@ def getstream(video):
 				qualityval = re.sub(r'\([^)]*\)', '', quality)
 				#ic(qualityval)
 				stream = video.streams.filter(only_audio=True,abr=qualityval).first()
+				ic(stream)
 				if stream:      
 					downloadstream(title,stream,qualityval)
 				else: 
