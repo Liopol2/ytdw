@@ -29,10 +29,10 @@ videoqualityoptions = [
 #Audio Quality Options
 audioqualityoptions = [
 	'48kbps(mp4)',
-	'50kbps(webm)',
-	'70kbps(webm)',
+	'50kbps(m4a)',
+	'70kbps(m4a)',
 	'128kbps(mp4)',
-	'160kbps(webm)'
+	'160kbps(m4a)'
 ]
 #Output Options
 outputoptions = [
@@ -84,19 +84,22 @@ def clearentry(event):
 	
 def validate_link(event):
 	url= content.get()
-	ic(url)
 	link.config(foreground='blue')
 	#manage playlist
 	if 'playlist' in url:
 		playlist=Playlist(url)
 		for stream in playlist.videos:
-			video= YouTube(stream.watch_url) #video= YouTube(stream.watch_url,on_progress_callback=on_progress)
+			try:
+				stream=YouTube(url,on_progress_callback=on_progress)
+			except Exception as e:
+				content.set(url+' is not a valid link')
 			getstream(video) 
 	#If this is only 1 video
 	else:
-		stream=YouTube(url) #stream=YouTube(url,on_progress_callback=on_progress)
-		isavailable = stream.check_availability()
-		ic(stream, isavailable)
+		try:
+			stream=YouTube(url,on_progress_callback=on_progress)
+		except Exception as e:
+			content.set(url+' is not a valid link')
 		getstream(stream)
 
 #Progressbar method
@@ -122,7 +125,8 @@ def getstream(video):
 	title=video.title
 	match output:
 		case 'Audio':
-			if os.path.exists(f'{folder}/{video.title}.webm'):
+			if os.path.exists(f'{folder}/{video.title}.m4a'):
+				ic(title)
 				fileexist(title)
 			else:
 				#este regex quita lo que esta dentro del parentesis
